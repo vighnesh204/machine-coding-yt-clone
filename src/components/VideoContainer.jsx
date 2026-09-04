@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { YOUTUBE_VIDEOS_API } from "../utils/constants";
-import js from "@eslint/js";
 import VideoCard from "./VideoCard";
 
 const VideoContainer = () => {
@@ -17,8 +16,10 @@ const VideoContainer = () => {
     setVideos(json?.items);
   };
   return (
-    <div>
-      <VideoCard info = {videos[0]} />
+    <div className="flex flex-wrap">
+      {videos.map((video) => (
+        <VideoCard key={video.id} info={video} />
+      ))}
     </div>
   );
 };
