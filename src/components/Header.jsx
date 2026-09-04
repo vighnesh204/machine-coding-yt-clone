@@ -2,29 +2,27 @@ import React from "react";
 import { MENU_ICON_URL, LOGO_URL, USER_ICON_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { toggleOpen } from "../utils/appSlice";
+import { Link } from "react-router-dom";
 
 const Header = () => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const toggleMenuHandler = () => {
-    dispatch(toggleOpen())
-  }
+    dispatch(toggleOpen());
+  };
 
   return (
     <div className="grid grid-flow-col px-4 py-2 shadow-md items-center bg-white">
       <div className="flex col-span-1 items-center gap-3">
         <img
-        onClick={() => toggleMenuHandler()}
+          onClick={() => toggleMenuHandler()}
           className="h-8 cursor-pointer"
           src={MENU_ICON_URL}
           alt="menu"
         />
-        <img
-          className="h-12 cursor-pointer"
-          src={LOGO_URL}
-          alt="logo"
-        />
+        <Link to="/">
+          <img className="h-12 cursor-pointer" src={LOGO_URL} alt="logo" />
+        </Link>
       </div>
       <div className="col-span-10 flex justify-center items-center">
         <input
