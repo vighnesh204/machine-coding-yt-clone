@@ -15,5 +15,13 @@ const VideoCard = ({ info }) => {
     </div>
   )
 }
+{/* Higher Order Component */}
+export const AdVideoCard = ({ info}) => {
+  return (
+   <div className='rounded-2xl *:bg-yellow-100 border border-yellow-300 shadow-sm'>
+     <VideoCard info={info} />
+   </div>
+  )
+}
 
 export default VideoCard
