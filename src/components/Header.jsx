@@ -5,21 +5,36 @@ import {
   USER_ICON_URL,
   YOUTUBE_SEARCH_API,
 } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleOpen } from "../utils/appSlice";
 import { Link } from "react-router-dom";
+import { cacheResults } from "../utils/searchSlice";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const searchCache = useSelector((store) => store.search);
+
+  /**
+   * serachCache = {
+   * 
+   *  iphone: ["iphone 17", "iphone 17 pro", "iphone 17 pro max", "iphone 17 ultra", "iphone 17 mini"],
+   * }
+   * serachQuery = "iphone"
+   */
 
   useEffect(() => {
     // make an API call after each key press
     // but if the difference between the two key presses is less than 200ms, then do not make an API call
     // else decline the api call
     const timer = setTimeout(() => {
-      getSearchSuggestions();
+      if (searchCache[searchQuery]) {
+        setSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchSuggestions();
+      }
     }, 200);
     return () => clearTimeout(timer);
   }, [searchQuery]);
@@ -35,6 +50,8 @@ const Header = () => {
       const json = await data.json();
 
       setSuggestions(json[1]);
+      // update the cache
+      dispatch(cacheResults({ [searchQuery]: json[1] }));
     } catch (error) {
       console.error("Error fetching suggestions:", error);
     }
@@ -67,8 +84,8 @@ const Header = () => {
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={()=> setShowSuggestions(true)}
-              onBlur={()=> setShowSuggestions(false)}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setShowSuggestions(false)}
             />
 
             {showSuggestions && (
